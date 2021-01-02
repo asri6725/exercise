@@ -38,17 +38,17 @@ def index():
 @app.route('/send',methods = ['POST'])
 def send():
     if request.method == 'POST':
-        firstname = request.form['firstname']
-        lastname = request.form['lastname']
-        date = str(request.form['date'])
-        email =request.form['email']
-        phone =request.form['phone']
-        fund =request.form['InvestmentFund']
-        amount = request.form['amount']
+        firstname = request.json.get('firstname')
+        lastname = request.json.get('lastname')
+        date = str(request.json.get('date'))
+        email =request.json.get('email')
+        phone =request.json.get('phone')
+        fund =request.json.get('InvestmentFund')
+        amount = request.json.get('amount')
         ret = dbhandler.insert_details(firstname, lastname, date, email, phone, fund, amount)
         sendmail(email, firstname)
 
-        return redirect("/")
+        return '200'
 
 @app.route('/users',methods = ['POST'])
 def users():
@@ -58,8 +58,8 @@ def users():
     # password = request.json.get('password')
     # print(username, password)
     users = { 'admin':'password', 'dev':'password'}
-    username = request.form['username']
-    password = request.form['password']
+    username = request.json.get('username')
+    password = request.json.get('password')
     if username in users:
         if users[username] == password:
             return jsonify(dbhandler.view_details())
