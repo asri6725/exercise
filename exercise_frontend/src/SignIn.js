@@ -70,9 +70,9 @@ class Signin extends React.Component{
     return(
       <div>
         <h4> Sign In </h4>
-          <form action="http://localhost:8080/users" method="POST">
-            <input type="text" placeholder="Username" name="username" value={this.state.username} onChange={this.handleusernameChange}/>
-            <input type="password" placeholder="Password" name="password" value={this.state.password} onChange={this.handlepasswordChange} />
+          <form action="/users" method="POST">
+            <input type="text" placeholder="Username" name="username" />
+            <input type="password" placeholder="Password" name="password"/>
             <button type = "Submit" name="Send"> Send </button>
             </form>
       </div>

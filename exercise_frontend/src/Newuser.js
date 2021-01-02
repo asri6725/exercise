@@ -51,7 +51,7 @@ class Newuser extends React.Component{
         return(
             <div>
                 <h3> Register </h3>
-                <form action="http://localhost:8080/send" method="POST">
+                <form action="/send" method="POST">
                 <input type="text" placeholder="First Name" name = "firstname" />
                 <input type="text" placeholder="Last Name" name = "lastname" />
                 <input type="date" name = "date" />
