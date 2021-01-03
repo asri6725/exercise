@@ -1,5 +1,8 @@
 import React from 'react';
 import axios from 'axios';
+
+import { Button, TextField, Select, MenuItem } from '@material-ui/core/';
+
 class Newuser extends React.Component{ 
     constructor(props){
         super(props)
@@ -20,7 +23,6 @@ class Newuser extends React.Component{
     }
     handleamountChange(event){
         this.setState({amount: event.target.value});
-        console.log("Amount Changed")
         if(this.state.InvestmentFund === 'Premium'){
           if(this.state.amount < 1000){
             this.setState({fund_amount_check: false})
@@ -47,16 +49,13 @@ class Newuser extends React.Component{
     }
     handlefundChange(event){
         this.setState({InvestmentFund: event.target.value});
-        console.log(this.state);
     }
     
     generalChangeHandler = (e) => {
-      console.log("change")
       this.setState({[e.target.name]:e.target.value})
     }
 
     send = async () => {
-      console.log("click works")
       let response = await axios.post('/send', {
         firstname: this.state.firstname,
         lastname: this.state.lastname,
@@ -95,19 +94,26 @@ class Newuser extends React.Component{
           <div>
                 <h3> Register </h3>
                 <form>
-                <input type="text" placeholder="First Name" name = "firstname" value = {firstname} onChange={this.generalChangeHandler} />
-                <input type="text" placeholder="Last Name" name = "lastname" value={lastname} onChange={this.generalChangeHandler} />
-                <input type="date" name = "date" value={date} onChange={this.generalChangeHandler} />
-                <input type="mail" placeholder="email address" name = "email" value = {email}  onChange={this.generalChangeHandler} />
-                <input type="number" placeholder="phone number" name = "phone" value={phone} onChange={this.generalChangeHandler} />
+                <TextField required  label="First Name" name = "firstname" value = {firstname} onChange={this.generalChangeHandler} /> <br />
+                <TextField required  label="Last Name"name = "lastname" value={lastname} onChange={this.generalChangeHandler} /> <br /><br />
+                <TextField required  label="Date"  InputLabelProps={{ shrink: true, }} type="date" name = "date" value={date} onChange={this.generalChangeHandler} /> <br />
+                <TextField required  label="Email Address" type="mail" name = "email" value = {email}  onChange={this.generalChangeHandler} /><br /><br />
+                <TextField required  label="Phone Number" type="number" name = "phone" value={phone} onChange={this.generalChangeHandler}  /><br />
+                <p>Investment Type</p><Select 
+                          label="Investment Type"
+                          name = "InvestmentFund"
+                          value={this.state.fund} 
+                          onChange = {this.handlefundChange}
+                          defaultValue = "Premium"
+                        >
+                          <MenuItem value="Premium">Premium</MenuItem>
+                          <MenuItem value="Normal">Normal</MenuItem>
+                        </Select> <br /><br />
+
+                <TextField required  label="Amount" type="number" placeholder="amount" name = "amount" value={this.state.amount} onChange={this.handleamountChange}  /><br /><br />
                 
-                <select name = "InvestmentFund" value={this.state.fund} onChange = {this.handlefundChange}>
-                    <option value='Premium'> Premium </option>
-                    <option value='Normal'> Normal </option>
-                </select>
-                <input type="number" placeholder="amount" name = "amount" value={this.state.amount} onChange={this.handleamountChange}/>
                 </form>
-                <button onClick = {this.send.bind(this)}  disabled={!this.state.fund_amount_check}  > Send </button>
+                <Button variant="contained" color="Secondary"  onClick = {this.send.bind(this)}  disabled={!this.state.fund_amount_check}  > Send </Button>
                 
                 {data}
             </div>
