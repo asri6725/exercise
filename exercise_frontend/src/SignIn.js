@@ -33,20 +33,22 @@ class Signin extends React.Component{
 
   signin = async () => {
     
-    let response = await axios.post('/users', {
+    await axios.post('/users', {
       username: this.state.username,
       password: this.state.password,
       headers: {
         "Content-Type": "application/json"
       }
-    })
+    }).then(response =>{
+      console.log(response)
+      this.setState({users:this.state.users.concat(response.data), signedIn:true})
+      })
     
     .catch(error => {
       console.log(error)
     })
 
-    console.log(response)
-    this.setState({users:this.state.users.concat(response.data), signedIn:true})
+    
   }
 
   
@@ -113,7 +115,7 @@ class Signin extends React.Component{
       : 
       (
         <div>
-          <Button variant="contained" color="Primary" onClick={this.displayform}> See Users </Button>
+          <Button variant="contained" color="primary" onClick={this.displayform}> See Users </Button>
           {form}
         </div>
           

@@ -1,14 +1,14 @@
 import dbhandler
-from flask import Blueprint, Flask,  redirect, url_for, request, jsonify
+from flask import Flask,  redirect, url_for, request, jsonify
 from flask_mail import Mail, Message 
 
 
-#from flask_cors import CORS
+from flask_cors import CORS
 
 
 app = Flask(__name__, static_folder='../exercise_frontend/build/', static_url_path='/')
 mail = Mail(app) # instantiate the mail class
-#CORS(app)
+CORS(app)
 # configuration of mail 
 app.config['MAIL_SERVER']='smtp.gmail.com'
 app.config['MAIL_PORT'] = 465
@@ -38,25 +38,36 @@ def index():
 @app.route('/send',methods = ['POST'])
 def send():
     if request.method == 'POST':
-        firstname = request.json.get('firstname')
-        lastname = request.json.get('lastname')
-        date = str(request.json.get('date'))
-        email =request.json.get('email')
-        phone =request.json.get('phone')
-        fund =request.json.get('InvestmentFund')
-        amount = request.json.get('amount')
-        ret = dbhandler.insert_details(firstname, lastname, date, email, phone, fund, amount)
-        sendmail(email, firstname)
+        try:
+            firstname = request.json.get('firstname')
+            lastname = request.json.get('lastname')
+            date = str(request.json.get('date'))
+            email =request.json.get('email')
+            phone =request.json.get('phone')
+            fund =request.json.get('InvestmentFund')
+            amount = int(request.json.get('amount'))
+            if fund == "Premium":
+                if amount < 10000 or amount > 250000:
+                    return "Error: Please check the amount."
+            elif fund == "Normal":
+                if amount < 25000 or amount > 250000:
+                    return "Error: Please check the amount."
+            
+            if len(firstname)==0 or len(lastname)==0 or len(date)==0 or len(email)==0 or len(str(phone))==0 or len(str(amount))==0:
+                return "Error: Please check for missing fields."
+            
+            ret = dbhandler.insert_details(firstname, lastname, date, email, phone, fund, amount)
+            sendmail(email, firstname)
 
-        return '200'
+            return "200"
+        except Exception as e:
+            print(e)
+            return "Oops, looks like there is a server error. I apologise."
+
 
 @app.route('/users',methods = ['POST'])
 def users():
-    # print("This is the args >")
-    # print(request.json)
-    # username = request.json.get('username')
-    # password = request.json.get('password')
-    # print(username, password)
+    
     users = { 'admin':'password', 'dev':'password'}
     username = request.json.get('username')
     password = request.json.get('password')
@@ -69,4 +80,4 @@ def users():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0",port=80, debug=True) 
+    app.run(host="localhost",port=8080, debug=True) 
