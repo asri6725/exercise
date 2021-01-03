@@ -3,12 +3,12 @@ from flask import Flask,  redirect, url_for, request, jsonify
 from flask_mail import Mail, Message 
 
 
-from flask_cors import CORS
+#from flask_cors import CORS
 
 
 app = Flask(__name__, static_folder='../exercise_frontend/build/', static_url_path='/')
 mail = Mail(app) # instantiate the mail class
-CORS(app)
+#CORS(app)
 # configuration of mail 
 app.config['MAIL_SERVER']='smtp.gmail.com'
 app.config['MAIL_PORT'] = 465
@@ -80,4 +80,4 @@ def users():
 
 
 if __name__ == "__main__":
-    app.run(host="localhost",port=8080, debug=True) 
+    app.run(host="0.0.0.0",port=80, debug=True) 
